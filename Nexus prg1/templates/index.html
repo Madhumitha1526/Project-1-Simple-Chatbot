@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('static/image/desktop-wallpaper-fresh-dark-scenery-combination-dark-scenic.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Ensures no scrollbars appear */
+        }
+        #chat-container {
+            background: rgba(255, 255, 255, 0.8); /* White background with transparency */
+            width: 400px;
+            height: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensures the chat container has no overflow */
+        }
+        #chat-box {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto; /* Allows vertical scrolling for chat messages */
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+        .message.user {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+        }
+        .message.bot {
+            align-self: flex-start;
+            background-color: #fff;
+            border: 1px solid #ececec;
+        }
+        #input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ececec;
+            background: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ececec;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        #send-button {
+            background-color: #075e54;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-box"></div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Type a message" onkeypress="handleKeyPress(event)">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const userId = 'user1';  // Static user ID for this example
+
+        function appendMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = content;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                appendMessage(message, 'user');
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id: userId, message: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    appendMessage(data.response, 'bot');
+                    userInput.value = '';
+                });
+            }
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Automatically greet the user on page load
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId, message: '' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            appendMessage(data.response, 'bot');
+        });
+    </script>
+</body>
+</html>

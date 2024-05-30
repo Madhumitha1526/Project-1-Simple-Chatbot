@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Chatbot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: large;
+            background: url('static/image/desktop-wallpaper-fresh-dark-scenery-combination-dark-scenic.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Ensures no scrollbars appear */
+        }
+        #welcome-container {
+            text-align: center;
+            background: #f5f5f5;
+            padding: 50px;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #get-started-button {
+            background-color: #4c84aa;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="welcome-container">
+        <h1>Welcome to the Chatbot</h1>
+        
+        <button id="get-started-button">Get Started</button>
+    </div>
+    <script>
+        document.getElementById('get-started-button').addEventListener('click', () => {
+            window.location.href = '/chat';
+        });
+    </script>
+</body>
+</html>
